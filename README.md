@@ -24,9 +24,6 @@ Future Improvements:
 - Google Calendar / Outlook calendar export links
 - Admin dashboard to add and manage events
 
-Contributors:
-- [Your Names Here]
-
 To Run Locally:
 1. Clone the repository
 2. Run `npm install`
