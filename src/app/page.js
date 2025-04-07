@@ -1,43 +1,51 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { FaFacebook, FaTwitter, FaInstagram } from 'react-icons/fa';
 
 export default function Home() {
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState('All');
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const categories = [
     'All',
-    'Cultural Events',
-    'Social',
-    'Food',
-    'Has food',
-    'Networking',
-    'Sports',
-    'Religious',
-    'Others',
+    'Academics',
+    'Campus affairs',
+    'Athletics',
+    'Arts',
+    'Community',
+    'Sustainability'
   ];
 
-  const events = [
-    { id: 1, title: 'Basketball Game', category: 'Sports' },
-    { id: 2, title: 'Networking Night', category: 'Networking' },
-    { id: 3, title: 'Campus BBQ', category: 'Has food' },
-    { id: 4, title: 'Meditation and Prayer', category: 'Religious' },
-    { id: 5, title: 'Diwali Celebration', category: 'Cultural Events' },
-    { id: 6, title: 'Philosophy Talk', category: 'Others' },
-    { id: 7, title: 'Pizza and Politics', category: 'Food' },
-    { id: 8, title: 'Outdoor Movie Night', category: 'Social' },
-  ];
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const res = await fetch('https://calendar.colgate.edu/api/2/events');
+        const data = await res.json();
+        setEvents(data.events.map(e => e.event));
+      } catch (err) {
+        console.error('Failed to fetch events:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchEvents();
+  }, []);
 
-  const filteredEvents = events.filter(event =>
-    (filter === 'All' || event.category === filter) &&
-    event.title.toLowerCase().includes(query.toLowerCase())
-  );
+  const filteredEvents = events.filter(event => {
+    const title = event.title || '';
+    const themes = event.filters?.event_event_themes || [];
+    return (
+      (filter === 'All' || themes.some(t => t.name === filter)) &&
+      title.toLowerCase().includes(query.toLowerCase())
+    );
+  });
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4 py-10">
+    <main className="flex flex-col items-center justify-center min-h-screen bg-white px-4 py-10">
       <div className="flex flex-col items-center space-y-6 w-full max-w-3xl">
         <h1 className="text-6xl font-bold text-red-600 text-center">
           Colgate Events Calendar
@@ -70,19 +78,40 @@ export default function Home() {
         </div>
 
         <div className="w-full mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-          {filteredEvents.length > 0 ? (
+          {loading ? (
+            <p className="text-gray-500">Loading events...</p>
+          ) : filteredEvents.length > 0 ? (
             filteredEvents.map((event) => (
               <Link key={event.id} href={`/events/${event.id}`} className="block">
-                <div className="bg-white w-full p-0 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-200 border border-gray-200 overflow-hidden">
-                  <div className="h-40 bg-gray-300 w-full object-cover"></div>
-                  <div className="p-6">
-                    <h2 className="text-2xl font-bold text-red-600 mb-2">{event.title}</h2>
-                    <span className="inline-block mb-3 px-3 py-1 text-sm bg-red-100 text-red-700 rounded-full">
-                      {event.category}
-                    </span>
-                    <p className="text-gray-600 text-sm mb-4">
-                      This is a placeholder description for the event. More details can go here.
-                    </p>
+                <div className="bg-white w-full h-[500px] rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-200 border border-gray-200 overflow-hidden flex flex-col">
+                  {event.photo_url ? (
+                    <img
+                      src={event.photo_url}
+                      alt={event.title}
+                      className="h-60 w-full object-cover"
+                    />
+                  ) : (
+                    <div className="h-60 w-full bg-gray-300"></div>
+                  )}
+                  <div className="p-6 flex flex-col justify-between flex-1">
+                    <div>
+                      <h2 className="text-2xl font-bold text-red-600 mb-2">{event.title}</h2>
+                      <div className="flex flex-wrap gap-2 mb-3">
+                        {(event.filters?.event_event_themes?.slice(0, 3) || []).map((theme, idx) => (
+                          <span
+                            key={idx}
+                            className="inline-block px-3 py-1 text-sm bg-red-100 text-red-700 rounded-full whitespace-nowrap"
+                          >
+                            {theme.name}
+                          </span>
+                        ))}
+                      </div>
+                      <p className="text-gray-600 text-sm mb-4">
+                        {event.description_text?.length > 120
+                          ? event.description_text.substring(0, 120) + '...'
+                          : event.description_text || 'No description available.'}
+                      </p>
+                    </div>
                     <div className="border-t pt-4 flex justify-between items-center">
                       <span className="text-sm text-gray-500">Share:</span>
                       <div className="flex space-x-3 text-red-500">
