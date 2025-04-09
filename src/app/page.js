@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Router, useRouter } from 'next/router';
+// import { getServerSideProps } from './events/[eventId]/page';
 import Link from 'next/link';
 import { FaFacebook, FaTwitter, FaInstagram } from 'react-icons/fa';
 
@@ -20,11 +22,14 @@ export default function Home() {
     'Sustainability'
   ];
 
+
   useEffect(() => {
     const fetchEvents = async () => {
       try {
         const res = await fetch('https://calendar.colgate.edu/api/2/events');
+        
         const data = await res.json();
+        console.log(data); //console.log used to look at the api info
         setEvents(data.events.map(e => e.event));
       } catch (err) {
         console.error('Failed to fetch events:', err);
@@ -82,7 +87,7 @@ export default function Home() {
             <p className="text-gray-500">Loading events...</p>
           ) : filteredEvents.length > 0 ? (
             filteredEvents.map((event) => (
-              <Link key={event.id} href={`/events/${event.id}`} className="block">
+              <Link key={event.id} href={`/events/${event.id}`} passHref className="block">
                 <div className="bg-white w-full h-[500px] rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-200 border border-gray-200 overflow-hidden flex flex-col">
                   {event.photo_url ? (
                     <img
