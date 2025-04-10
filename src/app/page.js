@@ -1,10 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Router, useRouter } from 'next/router';
-// import { getServerSideProps } from './events/[eventId]/page';
 import Link from 'next/link';
-import { FaFacebook, FaTwitter, FaInstagram } from 'react-icons/fa';
+// import { FaFacebook, FaTwitter, FaInstagram } from 'react-icons/fa';
+import { 
+  FacebookShareButton, FacebookIcon,
+  TwitterShareButton, TwitterIcon,
+  WhatsappShareButton, WhatsappIcon,
+  RedditShareButton, RedditIcon,
+  InstagramIcon
+ } from 'next-share';
 
 export default function Home() {
   const [query, setQuery] = useState('');
@@ -120,9 +125,29 @@ export default function Home() {
                     <div className="border-t pt-4 flex justify-between items-center">
                       <span className="text-sm text-gray-500">Share:</span>
                       <div className="flex space-x-3 text-red-500">
-                        <button aria-label="Share on Facebook"><FaFacebook /></button>
-                        <button aria-label="Share on Twitter"><FaTwitter /></button>
-                        <button aria-label="Share on Instagram"><FaInstagram /></button>
+                        <div className="flex gap-x-[10px]">
+                          {/* icons and buttons used to share to popular social media platforms */}
+                          <FacebookShareButton
+                            url={`http://localhost:3000/events/${event.id}`}
+                          >
+                            <FacebookIcon size={22} round />
+                          </FacebookShareButton>
+                          <TwitterShareButton
+                            url={`http://localhost:3000/events/${event.id}`}
+                          >
+                            <TwitterIcon size={22} round />
+                          </TwitterShareButton>
+                          <WhatsappShareButton
+                            url={`http://localhost:3000/events/${event.id}`}
+                          >
+                            <WhatsappIcon size={22} round />
+                          </WhatsappShareButton>
+                          <RedditShareButton 
+                          url={`http://localhost:3000/events/${event.id}`}>
+                            <RedditIcon size={22} round />
+                          </RedditShareButton>
+                          <InstagramIcon size={22} round />
+                        </div>
                       </div>
                     </div>
                   </div>
