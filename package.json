@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tailwindcss/line-clamp": "^0.4.4",
     "next": "15.2.4",
     "next-share": "^0.27.0",
     "react": "^19.0.0",
