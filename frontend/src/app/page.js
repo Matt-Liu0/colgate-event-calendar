@@ -132,7 +132,7 @@ export default function Home() {
   return (
     <main className="flex flex-col items-center justify-center min-h-screen bg-white px-4 py-10">
       <div className="flex flex-col items-center space-y-6 w-full max-w-3xl">
-        <h1 className="text-6xl font-bold text-red-600 text-center">
+        <h1 className="text-6xl font-bold text-[#821019] text-center">
           Colgate Events Calendar
         </h1>
 
