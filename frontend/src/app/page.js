@@ -11,10 +11,44 @@ import {
 } from 'next-share';
 
 function EventCard({ event }) {
+  const downvoteNum = 0;
+  const upvoteNum = 1;
+
   const themes = (event.filters?.event_event_themes || []).slice(0, 3);
+  const [totalUpvotes, updateUpvotes] = useState(0);
+  const [totalDownvotes, updateDownvotes] = useState(0);
+  const [votedDown, setVotedDown] = useState(false);
+  const [votedUp, setVotedUp] = useState(false);
+  const [totalVotes, setTotalVotes] = useState(0);
+  
+  const handleVote = (voteNum) => {
+    if (votedDown && voteNum === downvoteNum || votedUp && voteNum === upvoteNum) {
+      return;
+    } else if (voteNum === downvoteNum && votedUp) {
+      updateUpvotes(totalUpvotes - 1);
+      updateDownvotes(totalDownvotes + 1);
+      setVotedDown(true);
+      setVotedUp(false);
+    } else if (voteNum === upvoteNum && votedDown) {
+      updateDownvotes(totalDownvotes - 1);
+      updateUpvotes(totalUpvotes + 1);
+      setVotedUp(true);
+      setVotedDown(false);
+    } else {
+      if (voteNum === upvoteNum) {
+        updateUpvotes(totalUpvotes + 1);
+        setVotedUp(true);
+      } else {
+        updateDownvotes(totalDownvotes + 1);
+        setVotedDown(true);
+      }
+      setTotalVotes(totalVotes + 1);
+    }
+  }
+
 
   return (
-    <Link key={event.id} href={`/events/${event.id}`} passHref className="block">
+    
       <div className="bg-white w-[95%] md:w-[90%] h-[500px] rounded-2xl shadow-lg mx-auto hover:shadow-xl transition-shadow duration-200 border border-gray-200 overflow-hidden flex flex-col">
         {event.photo_url ? (
           <img
@@ -28,6 +62,7 @@ function EventCard({ event }) {
 
         <div className="p-6 flex flex-col justify-between flex-1">
           <div>
+          <Link key={event.id} href={`/events/${event.id}`} passHref className="block">
             <h2
               className="text-xl font-bold text-red-600 mb-2"
               style={{
@@ -40,6 +75,7 @@ function EventCard({ event }) {
             >
               {event.title}
             </h2>
+            </Link>
 
             <div className="flex flex-wrap gap-1 mb-1">
               {themes.map((theme, idx) => (
@@ -63,6 +99,27 @@ function EventCard({ event }) {
                 ? event.description_text.substring(0, 120) + '...'
                 : event.description_text || 'No description available.'}
             </p>
+            <div className="flex items-center space-x-4 text-sm text-gray-600">
+              <div className="flex items-center space-x-1">
+                {/* <!-- Upvote Icon --> */}
+                <button className="hover:text-green-600 transition" onClick={() => handleVote(upvoteNum)}>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 fill-current" viewBox="0 0 20 20">
+                    <path d="M3 10h4v7h6v-7h4l-7-7-7 7z" />
+                  </svg>
+                </button>
+                <span>{totalUpvotes}</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                {/* <!-- Downvote Icon --> */}
+                <button className="hover:text-red-600 transition" onClick={() => handleVote(downvoteNum)}>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 fill-current" viewBox="0 0 20 20">
+                    <path d="M17 10h-4V3H7v7H3l7 7 7-7z" />
+                  </svg>
+                </button>
+                <span>{totalDownvotes}</span>
+              </div>
+              <span className="ml-2 text-xs text-gray-500">({((totalUpvotes/totalVotes) * 100) || 0}% approval)</span>
+            </div>
           </div>
 
           <div className="border-t pt-4 flex justify-between items-center">
@@ -85,7 +142,6 @@ function EventCard({ event }) {
           </div>
         </div>
       </div>
-    </Link>
   );
 }
 
