@@ -49,7 +49,7 @@ function EventCard({ event }) {
 
   return (
     
-      <div className="bg-white w-[95%] md:w-[90%] h-[500px] rounded-2xl shadow-lg mx-auto hover:shadow-xl transition-shadow duration-200 border border-gray-200 overflow-hidden flex flex-col">
+    <div className="flex flex-col h-full justify-between rounded-xl border border-[#D7B865] bg-[#FDF9F1] p-4">
         {event.photo_url ? (
           <img
             src={event.photo_url}
@@ -64,7 +64,7 @@ function EventCard({ event }) {
           <div>
           <Link key={event.id} href={`/events/${event.id}`} passHref className="block">
             <h2
-              className="text-xl font-bold text-red-600 mb-2"
+              className="text-xl font-bold text-[#821019] mb-2"
               style={{
                 display: '-webkit-box',
                 WebkitBoxOrient: 'vertical',
@@ -81,7 +81,7 @@ function EventCard({ event }) {
               {themes.map((theme, idx) => (
                 <span
                   key={idx}
-                  className="inline-block px-2 py-0.5 text-xs bg-red-100 text-red-700 rounded-full whitespace-nowrap max-w-[100px] overflow-hidden text-ellipsis"
+                  className="inline-block px-2 py-0.5 text-xs bg-red-100 text-[#821019] rounded-full whitespace-nowrap max-w-[100px] overflow-hidden text-ellipsis"
                   style={{
                     display: 'inline-block',
                     whiteSpace: 'nowrap',
@@ -186,9 +186,9 @@ export default function Home() {
   });
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-white px-4 py-10">
+    <main className="flex flex-col items-center justify-center min-h-screen bg-[#821019] px-4 py-10">
       <div className="flex flex-col items-center space-y-6 w-full max-w-3xl">
-        <h1 className="text-6xl font-bold text-[#821019] text-center">
+        <h1 className="text-6xl font-[cinzel] font-[700] text-[#D7B865] text-center">
           Colgate Events Calendar
         </h1>
 
@@ -198,7 +198,7 @@ export default function Home() {
             placeholder="Search for events..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-full px-4 py-3 rounded-xl shadow-md text-lg text-black focus:outline-none focus:ring-2 focus:ring-red-400"
+            className="w-full bg-white px-4 py-3 rounded-xl shadow-md text-lg text-[#821019] focus:outline-none focus:ring-2 focus:ring-red-400"
           />
         </form>
 
@@ -209,8 +209,8 @@ export default function Home() {
               onClick={() => setFilter(cat)}
               className={`px-4 py-2 rounded-full text-sm font-medium border ${
                 filter === cat
-                  ? 'bg-red-600 text-white border-red-600'
-                  : 'bg-white text-red-600 border-red-300'
+                  ? 'bg-[#D7B865] text-[#821019] border-[#D7B865]'
+                  : 'bg-white text-[#821019] border-[#D7B865]'
               }`}
             >
               {cat}
@@ -226,7 +226,9 @@ export default function Home() {
               <EventCard key={event.id} event={event} />
             ))
           ) : (
-            <p className="text-gray-500">No events found.</p>
+            <p className="text-[#F3EBD3] text-center italic text-lg font-light mt-10">
+              No events at the moment — check back soon for upcoming highlights.
+            </p>
           )}
         </div>
       </div>
