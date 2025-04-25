@@ -1,32 +1,36 @@
 import { Injectable } from '@nestjs/common';
+import {PrismaService} from '../prisma/prisma.service';
+import { User } from '../../generated/prisma'
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
-  private users = []; // TODO: swap for Prisma/DB
+  constructor(private prisma: PrismaService) {}
 
     //AuthService.validateUser
-  async findOneByEmail(email: string) {
-    return this.users.find(u => u.email === email);
-  }
+    async findOneByEmail(email: string): Promise<User | null> {
+      return this.prisma.user.findUnique({ where: { email } });
+    }
 
   //AuthService.login 
-  async findOneById(id: number): Promise<User | undefined> {
-    return this.users.find(u => u.id === id)
+  async findOneById(id: string): Promise<User | null> {
+    return this.prisma.user.findUnique({ where: { id } });
   }
 
   //AuthService.signup
-  async create(email: string, password: string) {
+  async create(email: string, password: string): Promise<User> {
     const hash = await bcrypt.hash(password, 10);
-    const user = { id: Date.now(), email, password: hash };
-    this.users.push(user);
-    return user;
+    return this.prisma.user.create({
+      data: { email, password: hash },
+    });
   }
 
   /** Expose user list without passwords */
-  async findAllPublic(): Promise<Omit<User, 'password'>[]> {
-    return this.users.map(({ password, ...rest }) => rest)
+  async findAll(): Promise<Omit<User, 'password'>[]> {
+    const users = await this.prisma.user.findMany();
+    return users.map(({ password, ...rest }) => rest);
   }
+
 }
 
 

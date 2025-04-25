@@ -6,7 +6,7 @@ export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
     @Get(':id')
-    getUser(@Param('id', ParseIntPipe) id: number) {
+    getUser(@Param('id') id: string) {
         return this.usersService.findOneById(id);
     }
 

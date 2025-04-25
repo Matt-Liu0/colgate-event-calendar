@@ -25,6 +25,7 @@
     "@nestjs/jwt": "^11.0.0",
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.1",
+    "@prisma/client": "^6.6.0",
     "@types/bcrypt": "^5.0.2",
     "bad-words": "^4.0.0",
     "bcrypt": "^5.1.1",
