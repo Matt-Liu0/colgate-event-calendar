@@ -1,7 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { supabase } from '@/lib/supabaseClient';
 import {
   FacebookShareButton, FacebookIcon,
   TwitterShareButton, TwitterIcon,
@@ -146,12 +148,27 @@ function EventCard({ event }) {
 }
 
 export default function Home() {
+  const router = useRouter();
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState('All');
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const categories = [
+  // Redirect unauthenticated users to /login
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data } = await supabase.auth.getSession();
+      const session = data.session;
+
+      if (!session) {
+        router.push('/login');
+      }
+    };
+
+    checkAuth();
+  }, [router]);
+
+   const categories = [
     'All',
     'Academics',
     'Campus affairs',
@@ -160,7 +177,7 @@ export default function Home() {
     'Community',
     'Sustainability'
   ];
-
+  
   useEffect(() => {
     const fetchEvents = async () => {
       try {

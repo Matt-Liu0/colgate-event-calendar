@@ -129,7 +129,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/davidreyes/colgate-event-calendar/backend/generated/prisma",
+      "value": "/Users/liuziyu/Desktop/Compsci/colgate-event-calendar/backend/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -143,12 +143,11 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/Users/davidreyes/colgate-event-calendar/backend/prisma/schema.prisma",
+    "sourceFilePath": "/Users/liuziyu/Desktop/Compsci/colgate-event-calendar/backend/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null,
-    "schemaEnvPath": "../../.env"
+    "rootEnvPath": null
   },
   "relativePath": "../../prisma",
   "clientVersion": "6.6.0",
