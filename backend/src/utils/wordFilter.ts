@@ -1,11 +1,8 @@
-import {Filter} from 'bad-words';
-
-const filter = new Filter();
-
+// utils/wordFilter.ts
 export function containsProfanity(text: string): boolean {
-  return filter.isProfane(text);
+  return false; // Stubbed out for now
 }
 
 export function cleanProfanity(text: string): string {
-  return filter.clean(text);
+  return text; // No cleaning applied
 }

@@ -1,4 +1,5 @@
-export class CreateUserDto{
-    readonly username: string;
-    readonly password: string;
+export class CreateUserDto {
+  readonly email: string;     // for Supabase Auth
+  readonly password: string;  // for Supabase Auth
+  readonly username?: string; // optional, for your own DB
 }

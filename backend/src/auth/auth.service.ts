@@ -1,33 +1,33 @@
+// src/auth/auth.service.ts
 import { Injectable } from '@nestjs/common';
-import {JwtService } from '@nestjs/jwt';
+import { supabase } from '../supabase/supabase.client';
 import { UsersService } from '../users/users.service';
-import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
-    constructor(
-        private usersService: UsersService,
-        private jwt: JwtService,
-    ){}
+  constructor(private usersService: UsersService) {}
 
-    async validateUser(email: string, pass: string){// check for error here later
-        const user = await this.usersService.findOneByEmail(email);
-        if (user && user.password && await bcrypt.compare(pass, user.password)) {
-            const {password, ...safe} = user; 
-            return safe;
-        }
-        return null;
-    }
+  async signup(email: string, password: string) {
+    const { data, error } = await supabase.auth.admin.createUser({
+      email,
+      password,
+    });
 
-    async signup(email: string, password: string) {
-        const user = await this.usersService.create(email,password);
-        return this.login(user);
-    }
+    if (error) throw new Error(error.message);
+    const userId = data.user?.id;
 
-    async login(user: any) {
-        const payload = { email: user.email, sub: user.id };
-        return {
-            access_token: this.jwt.sign(payload),
-        };
-    }
+    // Optional: store in your DB for profile/custom fields
+    await this.usersService.create(userId, email);
+
+    return { message: 'User created with Supabase', userId };
+  }
+
+  async login(_: any) {
+    // Supabase login happens on frontend (client-side SDK)
+    return { message: 'Login via frontend using Supabase client' };
+  }
+
+  async validateUser(email: string, pass: string): Promise<null> {
+    return null; // Disable for now; Supabase manages auth
+  }
 }
